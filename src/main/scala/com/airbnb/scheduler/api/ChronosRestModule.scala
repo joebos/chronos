@@ -28,6 +28,7 @@ class ChronosRestModule extends ServletModule {
   val pingUrl = "/ping"
   val metricsUrl = "/metrics"
   val loggingUrl = "/logging"
+  val indexUrl = "/index"
 
   protected override def configureServlets() {
     bind(classOf[ObjectMapper])
@@ -38,11 +39,13 @@ class ChronosRestModule extends ServletModule {
     bind(classOf[MetricsServlet]).in(Scopes.SINGLETON)
     bind(classOf[LogConfigServlet]).in(Scopes.SINGLETON)
     bind(classOf[ConstraintViolationExceptionMapper]).in(Scopes.SINGLETON)
+    bind(classOf[IndexPageServlet]).in(Scopes.SINGLETON)
 
     serve(pingUrl).`with`(classOf[PingServlet])
     serve(metricsUrl).`with`(classOf[MetricsServlet])
     serve(loggingUrl).`with`(classOf[LogConfigServlet])
     serve(guiceContainerUrl).`with`(classOf[GuiceContainer])
+    serve(indexUrl).`with`(classOf[IndexPageServlet])
 
     bind(classOf[Iso8601JobResource]).in(Scopes.SINGLETON)
     bind(classOf[DependentJobResource]).in(Scopes.SINGLETON)
