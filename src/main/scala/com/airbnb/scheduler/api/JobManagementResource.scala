@@ -111,11 +111,12 @@ class JobManagementResource @Inject()(val jobScheduler: JobScheduler,
   @Timed
   def list(): Response = {
     try {
-      val jobs = ListBuffer[BaseJob]()
+      val jobs = ListBuffer[JobEntry]()
       import scala.collection.JavaConversions._
       jobGraph.dag.vertexSet().map({
         job =>
-          jobs += jobGraph.getJobForName(job).get
+          jobs += new JobEntry(
+            jobGraph.getJobForName(job).get, jobMetrics.getJsonStats(job))
       })
       return Response.ok(jobs.toList).build
     } catch {

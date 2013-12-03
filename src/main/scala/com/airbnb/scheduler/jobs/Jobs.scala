@@ -89,3 +89,7 @@ case class DependencyBasedJob(
     @JsonProperty override val errorsSinceLastSuccess: Long = 0L,
     @JsonProperty override val uris: Seq[String] = List())
   extends BaseJob
+
+
+
+case class JobEntry(@JsonProperty baseJob: BaseJob, @JsonProperty stats: String)
