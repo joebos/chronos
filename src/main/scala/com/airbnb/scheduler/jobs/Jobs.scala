@@ -90,6 +90,5 @@ case class DependencyBasedJob(
     @JsonProperty override val uris: Seq[String] = List())
   extends BaseJob
 
-
-
 case class JobEntry(@JsonProperty baseJob: BaseJob, @JsonProperty stats: String)
+case class JobList(@JsonProperty jobEntries: Seq[JobEntry])

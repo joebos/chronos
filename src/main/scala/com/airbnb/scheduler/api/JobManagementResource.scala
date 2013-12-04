@@ -111,6 +111,26 @@ class JobManagementResource @Inject()(val jobScheduler: JobScheduler,
   @Timed
   def list(): Response = {
     try {
+      val jobs = ListBuffer[BaseJob]()
+      import scala.collection.JavaConversions._
+      jobGraph.dag.vertexSet().map({
+        job =>
+          jobs += jobGraph.getJobForName(job).get
+      })
+      return Response.ok(jobs.toList).build
+    } catch {
+      case ex: Throwable => {
+        log.log(Level.WARNING, "Exception while serving request", ex)
+        throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR)
+      }
+    }
+  }
+
+  @Path(PathConstants.jobEntries)
+  @GET
+  @Timed
+  def listJobsWithStats(): Response = {
+    try {
       val jobs = ListBuffer[JobEntry]()
       import scala.collection.JavaConversions._
       jobGraph.dag.vertexSet().map({
@@ -118,7 +138,7 @@ class JobManagementResource @Inject()(val jobScheduler: JobScheduler,
           jobs += new JobEntry(
             jobGraph.getJobForName(job).get, jobMetrics.getJsonStats(job))
       })
-      return Response.ok(jobs.toList).build
+      return Response.ok(new JobList(jobs)).build
     } catch {
       case ex: Throwable => {
         log.log(Level.WARNING, "Exception while serving request", ex)
