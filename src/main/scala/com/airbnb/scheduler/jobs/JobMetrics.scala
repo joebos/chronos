@@ -34,9 +34,13 @@ class JobMetrics @Inject() (registry: MetricRegistry) {
     stat.update(timeMs)
   }
 
-  def getJsonStats(jobName: String): String = {
+  def getJsonStatsAsString(jobName: String): String = {
     val snapshot = stats.getOrElseUpdate(jobName, mkStat(jobName))
     objectMapper.writeValueAsString(snapshot)
+  }
+
+  def getJsonStats(jobName: String) = {
+    stats.getOrElseUpdate(jobName, mkStat(jobName))
   }
 
   def updateJobStatus(jobName: String, success: Boolean) {

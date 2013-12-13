@@ -46,7 +46,7 @@ class StatsResource @Inject()(
 
       val mapper = new ObjectMapper()
       for (jobNameString <- jobGraph.dag.vertexSet()) {
-        val node = mapper.readTree(jobMetrics.getJsonStats(jobNameString))
+        val node = mapper.readTree(jobMetrics.getJsonStatsAsString(jobNameString))
         if (node.has(percentile) && node.get(percentile) != null) {
           val time = node.get(percentile).asDouble()
           jobs.append((jobNameString, time))

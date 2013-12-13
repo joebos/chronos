@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.{JsonSerialize, JsonDeserialize}
 import org.joda.time.{Period, Minutes}
 import com.airbnb.utils.{JobDeserializer}
+import com.codahale.metrics.Histogram
 
 /**
  * BaseJob encapsulates job specific information. BaseJob is defined for all tasks within a job.
@@ -90,5 +91,5 @@ case class DependencyBasedJob(
     @JsonProperty override val uris: Seq[String] = List())
   extends BaseJob
 
-case class JobEntry(@JsonProperty baseJob: BaseJob, @JsonProperty stats: String)
+case class JobEntry(@JsonProperty baseJob: BaseJob, @JsonProperty stats: Histogram)
 case class JobList(@JsonProperty jobEntries: Seq[JobEntry])

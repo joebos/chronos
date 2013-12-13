@@ -69,7 +69,7 @@ class JobManagementResource @Inject()(val jobScheduler: JobScheduler,
     try {
       require(!jobGraph.lookupVertex(jobName).isEmpty, "Job '%s' not found".format(jobName))
       val job = jobGraph.getJobForName(jobName).get
-      Response.ok(jobMetrics.getJsonStats(jobName)).build()
+      Response.ok(jobMetrics.getJsonStatsAsString(jobName)).build()
     } catch {
       case ex: IllegalArgumentException => {
         log.log(Level.INFO, "Bad Request", ex)
@@ -135,8 +135,9 @@ class JobManagementResource @Inject()(val jobScheduler: JobScheduler,
       import scala.collection.JavaConversions._
       jobGraph.dag.vertexSet().map({
         job =>
+          val metric = jobMetrics.getJsonStats(job)
           jobs += new JobEntry(
-            jobGraph.getJobForName(job).get, jobMetrics.getJsonStats(job))
+            jobGraph.getJobForName(job).get, metric)
       })
       return Response.ok(new JobList(jobs)).build
     } catch {
