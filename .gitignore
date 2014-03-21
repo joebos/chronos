@@ -4,3 +4,4 @@ failedurls.json
 .idea
 *.out
 *.*~
+target/
